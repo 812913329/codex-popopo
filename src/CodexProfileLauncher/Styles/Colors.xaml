@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      Codex 环境管理器 · 设计色板
+      气质：Linear / Raycast 式工具感 — 中性石墨表面 + 低饱和青绿强调
+      禁止：大面积渐变、彩色阴影、玻璃拟态、霓虹强调
+    -->
+
+    <!-- Surfaces -->
+    <Color x:Key="App.Color.Window">#FFF3F4F6</Color>
+    <Color x:Key="App.Color.Sidebar">#FFEBEDF0</Color>
+    <Color x:Key="App.Color.Surface">#FFFFFFFF</Color>
+    <Color x:Key="App.Color.SurfaceRaised">#FFFAFBFC</Color>
+    <Color x:Key="App.Color.SurfaceMuted">#FFEEF0F3</Color>
+    <Color x:Key="App.Color.SurfaceHover">#FFF0F2F5</Color>
+    <Color x:Key="App.Color.SurfaceSelected">#FFE6F4F2</Color>
+
+    <!-- Borders -->
+    <Color x:Key="App.Color.Border">#FFD0D5DD</Color>
+    <Color x:Key="App.Color.BorderSubtle">#FFE4E7EC</Color>
+    <Color x:Key="App.Color.BorderStrong">#FF98A2B3</Color>
+
+    <!-- Text -->
+    <Color x:Key="App.Color.TextPrimary">#FF16191F</Color>
+    <Color x:Key="App.Color.TextSecondary">#FF5B6472</Color>
+    <Color x:Key="App.Color.TextTertiary">#FF8B93A1</Color>
+    <Color x:Key="App.Color.TextOnAccent">#FFFFFFFF</Color>
+    <Color x:Key="App.Color.TextOnDanger">#FFFFFFFF</Color>
+
+    <!-- Accent: teal (低饱和青绿，仅主动作/焦点/选中) -->
+    <Color x:Key="App.Color.Accent">#FF0F766E</Color>
+    <Color x:Key="App.Color.AccentHover">#FF0D8A80</Color>
+    <Color x:Key="App.Color.AccentPressed">#FF0B5F59</Color>
+    <Color x:Key="App.Color.AccentSoft">#1F0F766E</Color>
+    <Color x:Key="App.Color.Focus">#FF0F766E</Color>
+
+    <!-- Semantic -->
+    <Color x:Key="App.Color.Danger">#FFC43C2C</Color>
+    <Color x:Key="App.Color.DangerHover">#FFA83224</Color>
+    <Color x:Key="App.Color.DangerPressed">#FF8F2A1E</Color>
+    <Color x:Key="App.Color.DangerSoft">#18C43C2C</Color>
+    <Color x:Key="App.Color.Success">#FF0F766E</Color>
+    <Color x:Key="App.Color.Warning">#FFB45309</Color>
+
+    <SolidColorBrush x:Key="App.Brush.Window" Color="{StaticResource App.Color.Window}" />
+    <SolidColorBrush x:Key="App.Brush.Sidebar" Color="{StaticResource App.Color.Sidebar}" />
+    <SolidColorBrush x:Key="App.Brush.Surface" Color="{StaticResource App.Color.Surface}" />
+    <SolidColorBrush x:Key="App.Brush.SurfaceRaised" Color="{StaticResource App.Color.SurfaceRaised}" />
+    <SolidColorBrush x:Key="App.Brush.SurfaceMuted" Color="{StaticResource App.Color.SurfaceMuted}" />
+    <SolidColorBrush x:Key="App.Brush.SurfaceHover" Color="{StaticResource App.Color.SurfaceHover}" />
+    <SolidColorBrush x:Key="App.Brush.SurfaceSelected" Color="{StaticResource App.Color.SurfaceSelected}" />
+
+    <SolidColorBrush x:Key="App.Brush.Border" Color="{StaticResource App.Color.Border}" />
+    <SolidColorBrush x:Key="App.Brush.BorderSubtle" Color="{StaticResource App.Color.BorderSubtle}" />
+    <SolidColorBrush x:Key="App.Brush.BorderStrong" Color="{StaticResource App.Color.BorderStrong}" />
+
+    <SolidColorBrush x:Key="App.Brush.TextPrimary" Color="{StaticResource App.Color.TextPrimary}" />
+    <SolidColorBrush x:Key="App.Brush.TextSecondary" Color="{StaticResource App.Color.TextSecondary}" />
+    <SolidColorBrush x:Key="App.Brush.TextTertiary" Color="{StaticResource App.Color.TextTertiary}" />
+    <SolidColorBrush x:Key="App.Brush.TextOnAccent" Color="{StaticResource App.Color.TextOnAccent}" />
+    <SolidColorBrush x:Key="App.Brush.TextOnDanger" Color="{StaticResource App.Color.TextOnDanger}" />
+
+    <SolidColorBrush x:Key="App.Brush.Accent" Color="{StaticResource App.Color.Accent}" />
+    <SolidColorBrush x:Key="App.Brush.AccentHover" Color="{StaticResource App.Color.AccentHover}" />
+    <SolidColorBrush x:Key="App.Brush.AccentPressed" Color="{StaticResource App.Color.AccentPressed}" />
+    <SolidColorBrush x:Key="App.Brush.AccentSoft" Color="{StaticResource App.Color.AccentSoft}" />
+    <SolidColorBrush x:Key="App.Brush.Focus" Color="{StaticResource App.Color.Focus}" />
+
+    <SolidColorBrush x:Key="App.Brush.Danger" Color="{StaticResource App.Color.Danger}" />
+    <SolidColorBrush x:Key="App.Brush.DangerSoft" Color="{StaticResource App.Color.DangerSoft}" />
+    <SolidColorBrush x:Key="App.Brush.DangerAction" Color="{StaticResource App.Color.Danger}" />
+    <SolidColorBrush x:Key="App.Brush.DangerActionHover" Color="{StaticResource App.Color.DangerHover}" />
+    <SolidColorBrush x:Key="App.Brush.DangerActionPressed" Color="{StaticResource App.Color.DangerPressed}" />
+
+    <SolidColorBrush x:Key="App.Brush.Success" Color="{StaticResource App.Color.Success}" />
+    <SolidColorBrush x:Key="App.Brush.Warning" Color="{StaticResource App.Color.Warning}" />
+
+    <!-- 注意：不要把 DropShadowEffect 挂到含文字的 Border 上，否则 WPF 整层位图化会糊字。 -->
+</ResourceDictionary>

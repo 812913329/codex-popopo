@@ -1,0 +1,70 @@
+# Build outputs
+bin/
+obj/
+artifacts/
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test / publish leftovers
+TestResults/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.trx
+
+# Local / temp
+tmp/
+.temp/
+*.log
+*.tmp
+*.cache
+*.pdb
+*.dll
+*.exe
+*.zip
+!tools/**/*.ps1
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.swp
+*~
+
+# Secrets / local config
+*.local.json
+appsettings.*.local.json
+.env
+.env.*
+!.env.example
+**/secrets/
+**/credentials/
+
+# NuGet
+packages/
+*.nuget.props
+*.nuget.targets

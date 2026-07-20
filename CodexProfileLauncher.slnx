@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CodexProfileLauncher.Core/CodexProfileLauncher.Core.csproj" />
+    <Project Path="src/CodexProfileLauncher/CodexProfileLauncher.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CodexProfileLauncher.JobBroker.TestHost/CodexProfileLauncher.JobBroker.TestHost.csproj" />
+    <Project Path="tests/CodexProfileLauncher.Core.Tests/CodexProfileLauncher.Core.Tests.csproj" />
+    <Project Path="tests/CodexProfileLauncher.Windows.Tests/CodexProfileLauncher.Windows.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,94 @@
+<Window x:Class="CodexProfileLauncher.Views.ConfirmationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="请确认"
+        Icon="{StaticResource App.VectorIcon}"
+        Width="520"
+        MinWidth="480"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{DynamicResource App.Brush.Window}"
+        Foreground="{DynamicResource App.Brush.TextPrimary}"
+        FontFamily="{StaticResource App.Font.Ui}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Fixed"
+        RenderOptions.ClearTypeHint="Enabled"
+        AutomationProperties.AutomationId="ConfirmationDialog">
+    <Grid Margin="26,24,26,22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Width="38"
+                    Height="38"
+                    CornerRadius="10"
+                    Background="{DynamicResource App.Brush.DangerSoft}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top">
+                <TextBlock Text="&#xE7BA;"
+                           FontFamily="{StaticResource App.Font.Icon}"
+                           FontSize="16"
+                           Foreground="{DynamicResource App.Brush.Danger}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock x:Name="HeadingTextBlock"
+                           Style="{StaticResource App.Text.StatusTitle}"
+                           FontSize="17"
+                           TextWrapping="Wrap"
+                           AutomationProperties.AutomationId="ConfirmationTitle" />
+                <TextBlock x:Name="MessageTextBlock"
+                           Style="{StaticResource App.Text.Secondary}"
+                           TextWrapping="Wrap"
+                           Margin="0,8,0,0"
+                           AutomationProperties.AutomationId="ConfirmationMessage"
+                           AutomationProperties.LiveSetting="Assertive" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="48,24,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="SecondaryButton"
+                    Grid.Column="1"
+                    Click="Secondary_Click"
+                    Style="{StaticResource App.SecondaryButton}"
+                    MinWidth="112"
+                    Visibility="Collapsed"
+                    AutomationProperties.AutomationId="ConfirmationSecondaryButton" />
+            <Button x:Name="CancelButton"
+                    Grid.Column="2"
+                    Click="Cancel_Click"
+                    IsCancel="True"
+                    Style="{StaticResource App.SecondaryButton}"
+                    MinWidth="112"
+                    Margin="10,0,0,0"
+                    AutomationProperties.AutomationId="ConfirmationCancelButton" />
+            <Button x:Name="ConfirmButton"
+                    Grid.Column="3"
+                    Click="Confirm_Click"
+                    Margin="10,0,0,0"
+                    MinWidth="128"
+                    AutomationProperties.AutomationId="ConfirmationConfirmButton" />
+        </Grid>
+    </Grid>
+</Window>

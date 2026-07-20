@@ -1,0 +1,102 @@
+<Window x:Class="CodexProfileLauncher.Views.MessageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="提示"
+        Icon="{StaticResource App.VectorIcon}"
+        Width="600"
+        MinWidth="520"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        SizeToContent="Height"
+        ResizeMode="CanResizeWithGrip"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{DynamicResource App.Brush.Window}"
+        Foreground="{DynamicResource App.Brush.TextPrimary}"
+        FontFamily="{StaticResource App.Font.Ui}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Fixed"
+        RenderOptions.ClearTypeHint="Enabled"
+        AutomationProperties.AutomationId="MessageDialog">
+    <Grid Margin="26,24,26,22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Border x:Name="IconBorder"
+                    Grid.Column="0"
+                    Width="38"
+                    Height="38"
+                    CornerRadius="10"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top">
+                <TextBlock x:Name="IconTextBlock"
+                           FontFamily="{StaticResource App.Font.Icon}"
+                           FontSize="16"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center" />
+            </Border>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock x:Name="HeadingTextBlock"
+                           Style="{StaticResource App.Text.StatusTitle}"
+                           FontSize="17"
+                           TextWrapping="Wrap"
+                           AutomationProperties.AutomationId="MessageTitle" />
+                <TextBlock x:Name="MessageTextBlock"
+                           Style="{StaticResource App.Text.Secondary}"
+                           TextWrapping="Wrap"
+                           Margin="0,8,0,0"
+                           AutomationProperties.AutomationId="MessageText"
+                           AutomationProperties.LiveSetting="Assertive" />
+            </StackPanel>
+        </Grid>
+
+        <Expander x:Name="DetailsExpander"
+                  Grid.Row="1"
+                  Header="查看详细信息"
+                  Style="{StaticResource App.Expander}"
+                  Margin="48,22,0,0"
+                  AutomationProperties.AutomationId="MessageDetailsExpander">
+            <TextBox x:Name="DetailsTextBox"
+                     IsReadOnly="True"
+                     MaxHeight="280"
+                     Margin="0,10,0,0"
+                     Padding="12"
+                     FontFamily="{StaticResource App.Font.Mono}"
+                     FontSize="12"
+                     TextWrapping="NoWrap"
+                     HorizontalScrollBarVisibility="Auto"
+                     VerticalScrollBarVisibility="Auto"
+                     Style="{StaticResource App.TextBox}"
+                     AutomationProperties.AutomationId="MessageDetailsTextBox" />
+        </Expander>
+
+        <Grid Grid.Row="2" Margin="48,26,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="CloseButton"
+                    Grid.Column="1"
+                    Click="Close_Click"
+                    Content="知道了"
+                    IsCancel="True"
+                    IsDefault="True"
+                    Style="{StaticResource App.PrimaryButton}"
+                    MinWidth="112"
+                    AutomationProperties.AutomationId="CloseMessageDialogButton"
+                    AutomationProperties.Name="关闭提示" />
+        </Grid>
+    </Grid>
+</Window>

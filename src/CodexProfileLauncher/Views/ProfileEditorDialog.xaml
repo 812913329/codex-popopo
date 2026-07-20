@@ -1,0 +1,242 @@
+<Window x:Class="CodexProfileLauncher.Views.ProfileEditorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="环境设置"
+        Icon="{StaticResource App.VectorIcon}"
+        Width="600"
+        MinWidth="560"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Background="{DynamicResource App.Brush.Window}"
+        Foreground="{DynamicResource App.Brush.TextPrimary}"
+        FontFamily="{StaticResource App.Font.Ui}"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        TextOptions.TextHintingMode="Fixed"
+        RenderOptions.ClearTypeHint="Enabled"
+        AutomationProperties.AutomationId="ProfileEditorDialog"
+        AutomationProperties.Name="环境设置">
+    <Grid Margin="26,24,26,22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,18">
+            <TextBlock AutomationProperties.AutomationId="ProfileEditorTitle">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock"
+                           BasedOn="{StaticResource App.Text.ProfileTitle}">
+                        <Setter Property="FontSize" Value="20" />
+                        <Setter Property="Text" Value="新建环境" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="Text" Value="编辑环境" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <TextBlock Text="设置环境名称和数据位置。可选择空目录，或选择一个已有内容的存放位置。"
+                       Style="{StaticResource App.Text.Secondary}"
+                       TextWrapping="Wrap"
+                       Margin="0,6,0,0" />
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                Style="{StaticResource App.Card}">
+            <ScrollViewer Padding="18"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0">
+                    <Label Content="环境名称"
+                           Style="{StaticResource App.FieldLabel}"
+                           Target="{Binding ElementName=NameTextBox}" />
+                    <TextBox x:Name="NameTextBox"
+                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource App.TextBox}"
+                             Margin="0,8,0,0"
+                             MaxLength="80"
+                             AutomationProperties.AutomationId="EnvironmentNameTextBox"
+                             AutomationProperties.Name="环境名称" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <Label Content="环境目录或存放位置"
+                           Style="{StaticResource App.FieldLabel}"
+                           Target="{Binding ElementName=DataRootTextBox}" />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="DataRootTextBox"
+                                 Grid.Column="0"
+                                 Text="{Binding DataRoot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource App.TextBox}"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 AutomationProperties.AutomationId="EnvironmentRootTextBox"
+                                 AutomationProperties.Name="环境目录或存放位置" />
+                        <Button Grid.Column="1"
+                                Click="BrowseDataRoot_Click"
+                                IsEnabled="{Binding CanEditDataRoot}"
+                                Content="浏览…"
+                                Style="{StaticResource App.SecondaryButton}"
+                                Margin="10,0,0,0"
+                                MinWidth="88"
+                                AutomationProperties.AutomationId="BrowseEnvironmentRootButton"
+                                AutomationProperties.Name="浏览环境目录或存放位置" />
+                    </Grid>
+                    <TextBlock Text="空目录会直接使用；若所选位置已有内容，启动器会在其中使用独占子目录，不会接管现有内容。"
+                               Style="{StaticResource App.Text.Caption}"
+                               TextWrapping="Wrap"
+                               Margin="0,6,0,0" />
+                    <Border Margin="0,10,0,0"
+                            Padding="12,10"
+                            Background="{DynamicResource App.Brush.AccentSoft}"
+                            BorderBrush="{DynamicResource App.Brush.Accent}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            AutomationProperties.AutomationId="ActualEnvironmentRootPreview">
+                        <StackPanel>
+                            <TextBlock Text="实际环境目录"
+                                       Style="{StaticResource App.Text.Caption}"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource App.Brush.TextPrimary}" />
+                            <TextBlock Text="{Binding ActualDataRoot}"
+                                       Margin="0,5,0,0"
+                                       FontFamily="{StaticResource App.Font.Mono}"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource App.Brush.Accent}"
+                                       AutomationProperties.AutomationId="ActualEnvironmentRootPath" />
+                            <TextBlock Text="{Binding DataRootResolutionNote}"
+                                       Margin="0,5,0,0"
+                                       Style="{StaticResource App.Text.Caption}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+                    <TextBlock Text="修改数据目录时，保存会把现有环境数据迁移到新位置，并改写配置中的绝对路径。请先关闭该环境的 Codex。"
+                               TextWrapping="Wrap"
+                               Margin="0,6,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock"
+                                   BasedOn="{StaticResource App.Text.Caption}">
+                                <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextPrimary}" />
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsEditMode}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Margin="0,20,0,0">
+                    <Label Content="默认工作目录（可选）"
+                           Style="{StaticResource App.FieldLabel}"
+                           Target="{Binding ElementName=WorkingDirectoryTextBox}" />
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="WorkingDirectoryTextBox"
+                                 Grid.Column="0"
+                                 Text="{Binding WorkingDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource App.TextBox}"
+                                 HorizontalScrollBarVisibility="Auto"
+                                 AutomationProperties.AutomationId="WorkingDirectoryTextBox"
+                                 AutomationProperties.Name="默认工作目录" />
+                        <Button Grid.Column="1"
+                                Click="BrowseWorkingDirectory_Click"
+                                Content="浏览…"
+                                Style="{StaticResource App.SecondaryButton}"
+                                Margin="10,0,0,0"
+                                MinWidth="88"
+                                AutomationProperties.AutomationId="BrowseWorkingDirectoryButton"
+                                AutomationProperties.Name="浏览默认工作目录" />
+                    </Grid>
+                </StackPanel>
+
+                <Border Grid.Row="3"
+                        Margin="0,18,0,0"
+                        AutomationProperties.AutomationId="ProfileValidationPanel">
+                    <Border.Style>
+                        <Style TargetType="Border"
+                               BasedOn="{StaticResource App.ValidationPanel}">
+                            <Setter Property="Visibility" Value="Visible" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding ValidationMessage}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ValidationMessage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="22" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="&#xE7BA;"
+                                   FontFamily="{StaticResource App.Font.Icon}"
+                                   FontSize="14"
+                                   Foreground="{DynamicResource App.Brush.Danger}"
+                                   VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding ValidationMessage}"
+                                   Style="{StaticResource App.Text.Body}"
+                                   TextWrapping="Wrap"
+                                   AutomationProperties.LiveSetting="Assertive" />
+                    </Grid>
+                </Border>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="0,22,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1"
+                    Click="Cancel_Click"
+                    Content="取消"
+                    IsCancel="True"
+                    Style="{StaticResource App.SecondaryButton}"
+                    MinWidth="96"
+                    AutomationProperties.AutomationId="CancelProfileButton"
+                    AutomationProperties.Name="取消环境设置" />
+            <Button Grid.Column="2"
+                    Click="Save_Click"
+                    Content="保存环境"
+                    IsDefault="True"
+                    Style="{StaticResource App.PrimaryButton}"
+                    Margin="10,0,0,0"
+                    MinWidth="118"
+                    AutomationProperties.AutomationId="SaveProfileButton"
+                    AutomationProperties.Name="保存环境" />
+        </Grid>
+    </Grid>
+</Window>

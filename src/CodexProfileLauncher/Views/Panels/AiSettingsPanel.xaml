@@ -1,0 +1,308 @@
+<UserControl x:Class="CodexProfileLauncher.Views.Panels.AiSettingsPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinHeight="420"
+             AutomationProperties.AutomationId="AiSettingsPanel"
+             AutomationProperties.Name="AI 配置面板">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TabControl Grid.Row="0"
+                    AutomationProperties.AutomationId="AiSettingsTabs">
+            <TabItem Header="API 连接"
+                     AutomationProperties.AutomationId="ApiConnectionTab">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="2,14,8,8">
+                    <StackPanel>
+                        <Border Style="{StaticResource App.Card}" Padding="18">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,18,0">
+                                    <TextBlock Text="使用自定义 API"
+                                               Style="{StaticResource App.Text.BodyStrong}" />
+                                    <TextBlock Text="启用后，下次启动 Codex 时使用此连接。"
+                                               Style="{StaticResource App.Text.Caption}"
+                                               Margin="0,3,0,0" />
+                                </StackPanel>
+                                <CheckBox Grid.Column="1"
+                                          IsChecked="{Binding ApiEnabled, Mode=TwoWay}"
+                                          VerticalAlignment="Center"
+                                          Content="启用"
+                                          AutomationProperties.AutomationId="ApiEnabledCheckBox"
+                                          AutomationProperties.Name="使用自定义 API" />
+                            </Grid>
+                        </Border>
+
+                        <StackPanel Margin="0,18,0,0">
+                            <Label Content="API 地址"
+                                   Style="{StaticResource App.FieldLabel}"
+                                   Target="{Binding ElementName=BaseUrlTextBox}" />
+                            <TextBox x:Name="BaseUrlTextBox"
+                                     Text="{Binding BaseUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource App.TextBox}"
+                                     Margin="0,8,0,0"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     AutomationProperties.AutomationId="ApiBaseUrlTextBox"
+                                     AutomationProperties.Name="API 地址" />
+                        </StackPanel>
+
+                        <StackPanel Margin="0,18,0,0">
+                            <Label Content="API Key（本机明文保存）"
+                                   Style="{StaticResource App.FieldLabel}"
+                                   Target="{Binding ElementName=ApiKeyTextBox}" />
+                            <TextBox x:Name="ApiKeyTextBox"
+                                     Text="{Binding ApiKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Style="{StaticResource App.TextBox}"
+                                     FontFamily="{StaticResource App.Font.Mono}"
+                                     Margin="0,8,0,0"
+                                     HorizontalScrollBarVisibility="Auto"
+                                     AutomationProperties.AutomationId="ApiKeyTextBox"
+                                     AutomationProperties.Name="明文 API Key" />
+                            <WrapPanel Margin="0,10,0,0">
+                                <Button Content="复制 Key"
+                                        Click="CopyKey_Click"
+                                        Style="{StaticResource App.SecondaryButton}"
+                                        MinWidth="96"
+                                        AutomationProperties.AutomationId="CopyApiKeyButton" />
+                                <Button Content="打开配置文件"
+                                        Click="OpenSettingsFile_Click"
+                                        Style="{StaticResource App.SecondaryButton}"
+                                        Margin="8,0,0,0"
+                                        MinWidth="118"
+                                        AutomationProperties.AutomationId="OpenAiSettingsFileButton" />
+                                <Button Content="清空并停用"
+                                        Click="ClearApi_Click"
+                                        Style="{StaticResource App.DangerButton}"
+                                        Margin="8,0,0,0"
+                                        MinWidth="110"
+                                        AutomationProperties.AutomationId="ClearApiButton" />
+                            </WrapPanel>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,18,0,0">
+                            <Label Content="默认模型（实时列表）"
+                                   Style="{StaticResource App.FieldLabel}"
+                                   Target="{Binding ElementName=SelectedModelComboBox}" />
+                            <ComboBox x:Name="SelectedModelComboBox"
+                                      ItemsSource="{Binding AvailableModels}"
+                                      Text="{Binding SelectedModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      IsEditable="True"
+                                      IsTextSearchEnabled="True"
+                                      Margin="0,8,0,0"
+                                      MinHeight="40"
+                                      AutomationProperties.AutomationId="SelectedModelComboBox"
+                                      AutomationProperties.Name="默认模型" />
+                            <TextBlock Text="列表来自实时 GET /models。保存/启动时写入 model_provider + model_catalog_json。切换模型后请重启该环境 Codex。"
+                                       Style="{StaticResource App.Text.Caption}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,6,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Margin="0,18,0,0">
+                            <Label Content="推理强度（思考等级）"
+                                   Style="{StaticResource App.FieldLabel}"
+                                   Target="{Binding ElementName=ReasoningEffortComboBox}" />
+                            <ComboBox x:Name="ReasoningEffortComboBox"
+                                      ItemsSource="{Binding ReasoningEffortOptions}"
+                                      SelectedItem="{Binding ModelReasoningEffort, Mode=TwoWay}"
+                                      Margin="0,8,0,0"
+                                      MinHeight="40"
+                                      AutomationProperties.AutomationId="ReasoningEffortComboBox"
+                                      AutomationProperties.Name="推理强度" />
+                            <TextBlock Text="可选 minimal / low / medium / high / xhigh / max / ultra。"
+                                       Style="{StaticResource App.Text.Caption}"
+                                       TextWrapping="Wrap"
+                                       Margin="0,6,0,0" />
+                        </StackPanel>
+
+                        <Border Margin="0,18,0,0"
+                                Padding="14"
+                                CornerRadius="8"
+                                Background="{DynamicResource App.Brush.SurfaceMuted}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Margin="0,0,14,0">
+                                    <TextBlock Text="连接测试 / 实时拉取"
+                                               Style="{StaticResource App.Text.BodyStrong}" />
+                                    <TextBlock Text="{Binding TestResultText}"
+                                               Style="{StaticResource App.Text.Caption}"
+                                               TextWrapping="Wrap"
+                                               Margin="0,3,0,0"
+                                               AutomationProperties.LiveSetting="Polite" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Button Content="刷新模型"
+                                            Click="RefreshModels_Click"
+                                            IsEnabled="{Binding IsNotBusy}"
+                                            Style="{StaticResource App.SecondaryButton}"
+                                            MinWidth="96"
+                                            Margin="0,0,8,0"
+                                            AutomationProperties.AutomationId="RefreshModelsButton" />
+                                    <Button Content="测试连接"
+                                            Click="TestConnection_Click"
+                                            IsEnabled="{Binding IsNotBusy}"
+                                            Style="{StaticResource App.SecondaryButton}"
+                                            MinWidth="112"
+                                            AutomationProperties.AutomationId="TestApiConnectionButton" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <TabItem Header="系统提示词"
+                     AutomationProperties.AutomationId="SystemPromptTab">
+                <Grid Margin="2,14,8,8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Style="{StaticResource App.Card}" Padding="18" Margin="0,0,0,12">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,18,0">
+                                <TextBlock Text="Keysmith 执行模式（默认开启）"
+                                           Style="{StaticResource App.Text.BodyStrong}" />
+                                <TextBlock Text="默认启用。内置 codex-keysmith 同款 model_instructions：写入 CODEX_HOME/gpt-unrestricted.md，隔离 hooks 到 hooks.json.disabled，并锁定 managed 的 model_instructions_file。"
+                                           Style="{StaticResource App.Text.Caption}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,3,0,0" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1"
+                                      IsChecked="{Binding KeysmithModeEnabled, Mode=TwoWay}"
+                                      VerticalAlignment="Center"
+                                      Content="已启用"
+                                      AutomationProperties.AutomationId="KeysmithModeCheckBox"
+                                      AutomationProperties.Name="Keysmith 执行模式（默认开启）" />
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="1" Style="{StaticResource App.Card}" Padding="18">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,18,0">
+                                <TextBlock Text="替换系统提示词（默认开启）"
+                                           Style="{StaticResource App.Text.BodyStrong}" />
+                                <TextBlock Text="默认会完全替换 Codex 内置模型指令。每个环境使用内置 operator-core 提示词；保存/启动时写入 CODEX_HOME 下的 model_instructions_file。Keysmith 模式开启时改用 unrestricted 文本。"
+                                           Style="{StaticResource App.Text.Caption}"
+                                           TextWrapping="Wrap"
+                                           Margin="0,3,0,0" />
+                            </StackPanel>
+                            <CheckBox Grid.Column="1"
+                                      IsChecked="{Binding SystemPromptEnabled, Mode=TwoWay}"
+                                      IsEnabled="False"
+                                      VerticalAlignment="Center"
+                                      Content="已启用"
+                                      ToolTip="产品默认始终替换系统提示词；关闭请联系配置策略。当前版本强制启用。"
+                                      AutomationProperties.AutomationId="SystemPromptEnabledCheckBox"
+                                      AutomationProperties.Name="替换系统提示词（已默认启用）" />
+                        </Grid>
+                    </Border>
+
+                    <WrapPanel Grid.Row="2" Margin="0,14,0,10">
+                        <Button Content="导入或替换…"
+                                Click="ImportPrompt_Click"
+                                Style="{StaticResource App.SecondaryButton}"
+                                MinWidth="118"
+                                AutomationProperties.AutomationId="ImportSystemPromptButton" />
+                        <Button Content="打开提示词文件"
+                                Click="OpenPromptFile_Click"
+                                Style="{StaticResource App.SecondaryButton}"
+                                Margin="8,0,0,0"
+                                MinWidth="126"
+                                AutomationProperties.AutomationId="OpenSystemPromptFileButton" />
+                        <Button Content="撤销"
+                                Click="UndoPrompt_Click"
+                                Style="{StaticResource App.TertiaryButton}"
+                                Margin="8,0,0,0"
+                                MinWidth="70"
+                                AutomationProperties.AutomationId="UndoSystemPromptButton" />
+                        <Button Content="清空"
+                                Click="ClearPrompt_Click"
+                                Style="{StaticResource App.TertiaryButton}"
+                                Margin="4,0,0,0"
+                                MinWidth="70"
+                                AutomationProperties.AutomationId="ClearSystemPromptButton" />
+                    </WrapPanel>
+
+                    <TextBox x:Name="SystemPromptTextBox"
+                             Grid.Row="3"
+                             Text="{Binding SystemPrompt, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Style="{StaticResource App.EditorTextBox}"
+                             MinHeight="200"
+                             AcceptsReturn="True"
+                             AcceptsTab="True"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             SpellCheck.IsEnabled="False"
+                             AutomationProperties.AutomationId="SystemPromptTextBox"
+                             AutomationProperties.Name="系统提示词内容" />
+
+                    <TextBlock Grid.Row="4"
+                               Text="{Binding PromptCharacterCountText}"
+                               Style="{StaticResource App.Text.Caption}"
+                               HorizontalAlignment="Right"
+                               Margin="0,8,0,0" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <Border Grid.Row="1"
+                Background="{DynamicResource App.Brush.Surface}"
+                BorderBrush="{DynamicResource App.Brush.BorderSubtle}"
+                BorderThickness="0,1,0,0"
+                Padding="4,12,4,4"
+                Margin="0,8,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Text="{Binding StatusText}"
+                           Style="{StaticResource App.Text.Caption}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           Margin="0,0,12,0"
+                           AutomationProperties.LiveSetting="Polite" />
+                <Button Grid.Column="1"
+                        Content="重新载入"
+                        Click="Reload_Click"
+                        IsEnabled="{Binding IsNotBusy}"
+                        Style="{StaticResource App.TertiaryButton}"
+                        MinWidth="88"
+                        AutomationProperties.AutomationId="ReloadAiSettingsButton" />
+                <Button Grid.Column="2"
+                        Content="保存"
+                        Click="Save_Click"
+                        IsEnabled="{Binding IsNotBusy}"
+                        Style="{StaticResource App.PrimaryButton}"
+                        Margin="8,0,0,0"
+                        MinWidth="104"
+                        AutomationProperties.AutomationId="SaveAiSettingsButton" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

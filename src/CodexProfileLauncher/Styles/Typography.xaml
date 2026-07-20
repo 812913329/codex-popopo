@@ -1,0 +1,119 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+      锐利文字原则（WPF）：
+      1) 整数字号（禁止 13.5 / 11.5，半像素易糊）
+      2) 优先经典 Segoe UI（Variable 在 WPF 部分 DPI 下偏软）
+      3) TextFormattingMode=Display + ClearType
+      4) 含文字的容器禁用 DropShadowEffect（会整层位图化导致糊）
+    -->
+    <FontFamily x:Key="App.Font.Ui">Segoe UI, Segoe UI Variable Text</FontFamily>
+    <FontFamily x:Key="App.Font.UiDisplay">Segoe UI, Segoe UI Variable Display, Segoe UI Variable Text</FontFamily>
+    <FontFamily x:Key="App.Font.Icon">Segoe Fluent Icons, Segoe MDL2 Assets, Segoe UI Symbol</FontFamily>
+    <FontFamily x:Key="App.Font.Mono">Cascadia Mono, Consolas, Courier New</FontFamily>
+
+    <Style x:Key="App.Text.PageTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.UiDisplay}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="22" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextPrimary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style x:Key="App.Text.ProfileTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.UiDisplay}" />
+        <Setter Property="FontSize" Value="22" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="30" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextPrimary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style x:Key="App.Text.StatusTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Ui}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="26" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextPrimary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style x:Key="App.Text.SectionTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Ui}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="18" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextSecondary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+    </Style>
+
+    <Style x:Key="App.Text.Body" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Ui}" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="LineHeight" Value="20" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextPrimary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style x:Key="App.Text.BodyStrong"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource App.Text.Body}">
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style x:Key="App.Text.Secondary"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource App.Text.Body}">
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextSecondary}" />
+    </Style>
+
+    <Style x:Key="App.Text.Caption" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Ui}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="LineHeight" Value="16" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextSecondary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+        <Setter Property="TextOptions.TextHintingMode" Value="Fixed" />
+    </Style>
+
+    <Style x:Key="App.Text.Overline" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Ui}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="LineHeight" Value="14" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextTertiary}" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="ClearType" />
+    </Style>
+
+    <Style x:Key="App.Text.Path"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource App.Text.Secondary}">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Mono}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="LineHeight" Value="18" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextSecondary}" />
+    </Style>
+
+    <Style x:Key="App.Text.Technical"
+           TargetType="TextBlock"
+           BasedOn="{StaticResource App.Text.Caption}">
+        <Setter Property="FontFamily" Value="{StaticResource App.Font.Mono}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="Foreground" Value="{DynamicResource App.Brush.TextTertiary}" />
+    </Style>
+</ResourceDictionary>
