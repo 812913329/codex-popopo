@@ -549,15 +549,7 @@ public sealed class WindowsJobObjectManagerTests
                 "..",
                 ".."));
             brokerExecutable = Path.Combine(dotnetRoot, "dotnet.exe");
-            managedEntryPoint = Path.Combine(
-                GetWorkspaceRoot(),
-                "src",
-                "CodexProfileLauncher",
-                "bin",
-                "Release",
-                "net10.0-windows10.0.19041.0",
-                "win-x64",
-                "CodexProfileLauncher.dll");
+            managedEntryPoint = BuildOutputPaths.RequireBrokerManagedEntryPoint();
         }
         else
         {
@@ -871,17 +863,7 @@ public sealed class WindowsJobObjectManagerTests
 
     private static TestFixture CreateFixture()
     {
-        var workspaceRoot = GetWorkspaceRoot();
-        var brokerExecutable = Path.Combine(
-            workspaceRoot,
-            "src",
-            "CodexProfileLauncher",
-            "bin",
-            "Release",
-            "net10.0-windows10.0.19041.0",
-            "win-x64",
-            "CodexProfileLauncher.exe");
-        Assert.IsTrue(File.Exists(brokerExecutable), $"测试 broker EXE 不存在：{brokerExecutable}");
+        var brokerExecutable = BuildOutputPaths.RequireBrokerExecutable();
         var dotnetRoot = Path.GetFullPath(Path.Combine(
             Path.GetDirectoryName(typeof(object).Assembly.Location)
                 ?? throw new AssertFailedException("无法定位测试 .NET runtime。"),
@@ -901,23 +883,12 @@ public sealed class WindowsJobObjectManagerTests
     private static TestFixture CreateTestHostFixture()
     {
         var testHostExecutable = GetTestHostExecutablePath();
-        Assert.IsTrue(
-            File.Exists(testHostExecutable),
-            $"Job broker TestHost EXE 不存在：{testHostExecutable}");
         var manager = new WindowsJobObjectManager(testHostExecutable);
         return new(manager, manager.CreateNames(Guid.NewGuid(), Guid.NewGuid()));
     }
 
     private static string GetTestHostExecutablePath() =>
-        Path.Combine(
-            GetWorkspaceRoot(),
-            "tests",
-            "CodexProfileLauncher.JobBroker.TestHost",
-            "bin",
-            "Release",
-            "net10.0-windows10.0.19041.0",
-            "win-x64",
-            "CodexProfileLauncher.JobBroker.TestHost.exe");
+        BuildOutputPaths.RequireTestHostExecutable();
 
     private static (string Reached, string Release) CreatePauseNames(TestFixture fixture)
     {
@@ -967,14 +938,7 @@ public sealed class WindowsJobObjectManagerTests
         return startInfo;
     }
 
-    private static string GetWorkspaceRoot() =>
-        Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            ".."));
+    private static string GetWorkspaceRoot() => BuildOutputPaths.GetWorkspaceRoot();
 
     private static ProcessStartInfo SleepProcessStartInfo(int seconds)
     {
