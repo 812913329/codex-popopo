@@ -114,7 +114,13 @@ if ([string]::IsNullOrWhiteSpace($fileVersion.ProductVersion)) {
     throw 'Published EXE has no product version; refusing to name the release archive.'
 }
 
-$archivePath = Join-Path $artifactsRoot "CodexProfileLauncher-v$($fileVersion.ProductVersion)-$RuntimeIdentifier.zip"
+# Strip optional "+commit" informational suffix so archive names stay tag-friendly (v1.1.6).
+$releaseVersion = ($fileVersion.ProductVersion -split '\+', 2)[0].Trim()
+if ([string]::IsNullOrWhiteSpace($releaseVersion)) {
+    throw "Unable to derive release version from ProductVersion '$($fileVersion.ProductVersion)'."
+}
+
+$archivePath = Join-Path $artifactsRoot "CodexProfileLauncher-v$releaseVersion-$RuntimeIdentifier.zip"
 $safeArchivePath = Assert-InWorkspace $archivePath
 $archiveStagingPath = "$safeArchivePath.staging-$PID-$([Guid]::NewGuid().ToString('N'))"
 try {
@@ -199,7 +205,8 @@ $metadata = [ordered]@{
         sha256 = (Get-FileHash -LiteralPath $exe.FullName -Algorithm SHA256).Hash
         authenticodeStatus = $signature.Status.ToString()
         productName = $fileVersion.ProductName
-        productVersion = $fileVersion.ProductVersion
+        productVersion = $releaseVersion
+        productVersionRaw = $fileVersion.ProductVersion
         fileDescription = $fileVersion.FileDescription
         fileVersion = $fileVersion.FileVersion
         companyName = $fileVersion.CompanyName

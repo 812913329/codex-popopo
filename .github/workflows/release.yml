@@ -61,6 +61,8 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($productVersion)) {
             throw 'release-metadata.json has empty executable.productVersion.'
           }
+          # Defense in depth: ignore optional "+commit" informational suffix.
+          $productVersion = ($productVersion -split '\+', 2)[0].Trim()
 
           $tag = $env:RELEASE_TAG
           if ([string]::IsNullOrWhiteSpace($tag)) {
