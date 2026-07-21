@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. v1.1.6)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-2022
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - name: Restore dependencies
+        run: dotnet restore --locked-mode
+
+      - name: Publish (self-contained, single-file)
+        run: >
+          dotnet publish CodexProfileLauncher\CodexProfileLauncher.csproj
+          -c Release
+          -o artifacts\publish\win-x64
+          --no-restore
+
+      - name: Read version from csproj
+        id: version
+        shell: pwsh
+        run: |
+          [xml]$csproj = Get-Content CodexProfileLauncher\CodexProfileLauncher.csproj
+          $v = $csproj.Project.PropertyGroup.Version
+          Write-Output "version=$v"
+          echo "version=$v" >> $env:GITHUB_OUTPUT
+
+      - name: Create release archive
+        shell: pwsh
+        run: |
+          $version = '${{ steps.version.outputs.version }}'
+          $archive = "CodexProfileLauncher-$version-win-x64.zip"
+          Compress-Archive -Path artifacts\publish\win-x64\* -DestinationPath "artifacts\$archive"
+          Write-Output "archive=$archive"
+          echo "archive=$archive" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag || github.ref_name }}
+          files: artifacts/CodexProfileLauncher-*-win-x64.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
