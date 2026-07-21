@@ -166,7 +166,20 @@ $testResults = foreach ($trxName in @('core-release.trx', 'windows-release.trx')
     }
 }
 
-$codexPackage = Get-AppxPackage -Name OpenAI.Codex -ErrorAction SilentlyContinue | Select-Object -First 1
+# Optional diagnostic only: Appx/Get-AppxPackage is unavailable under some
+# PowerShell 7 / non-interactive runner environments (e.g. GitHub Actions).
+$codexPackageVersion = $null
+try {
+    $codexPackage = Get-AppxPackage -Name OpenAI.Codex -ErrorAction Stop |
+        Select-Object -First 1
+    if ($null -ne $codexPackage) {
+        $codexPackageVersion = $codexPackage.Version.ToString()
+    }
+}
+catch {
+    Write-Host "Skipping Get-AppxPackage metadata probe: $($_.Exception.Message)"
+}
+
 $metadata = [ordered]@{
     generatedUtc = (Get-Date).ToUniversalTime().ToString('O')
     dotnetSdk = (& $dotnet --version).Trim()
@@ -176,7 +189,7 @@ $metadata = [ordered]@{
         "enabled"
     }
     runtimeIdentifier = $RuntimeIdentifier
-    codexPackageVersion = if ($codexPackage) { $codexPackage.Version.ToString() } else { $null }
+    codexPackageVersion = $codexPackageVersion
     publishedFileCount = $publishedFiles.Count
     builtinSkillCount = $builtinSkillFiles.Count
     executable = [ordered]@{

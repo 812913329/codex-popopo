@@ -613,27 +613,7 @@ public sealed class RealStoreMirrorLaunchIntegrationTests
                     $"{TestHostPathEnvironmentVariable} 指向的 creator TestHost 不存在：{normalized}");
         }
 
-        var configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name
-            ?? throw new AssertFailedException("无法确定当前测试配置。");
-        var workspaceRoot = Path.GetFullPath(Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            ".."));
-        var executable = Path.Combine(
-            workspaceRoot,
-            "tests",
-            "CodexProfileLauncher.JobBroker.TestHost",
-            "bin",
-            configuration,
-            "net10.0-windows10.0.19041.0",
-            "win-x64",
-            "CodexProfileLauncher.JobBroker.TestHost.exe");
-        return File.Exists(executable)
-            ? executable
-            : throw new AssertFailedException($"creator TestHost 不存在：{executable}");
+        return BuildOutputPaths.RequireTestHostExecutable();
     }
 
     private sealed record RealStoreMirrorProbeResult(

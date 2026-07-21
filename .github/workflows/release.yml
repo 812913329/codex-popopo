@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to release (e.g. v1.1.6). Must already point at the intended commit.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  # Serialize by effective release tag so tag-push and dispatch cannot race.
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: windows-2022
+    timeout-minutes: 45
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          # Tag push: github.ref. Manual dispatch: require the existing tag ref.
+          ref: ${{ inputs.tag || github.ref }}
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: '**/packages.lock.json'
+
+      - name: Verify release
+        shell: pwsh
+        # Authoritative gate: locked restore, warnaserror, tests, publish,
+        # content checks, and CodexProfileLauncher-v{ProductVersion}-win-x64.zip.
+        run: .\tools\Verify-Release.ps1
+
+      - name: Validate tag matches product version
+        id: release_meta
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $metaPath = 'artifacts/release-metadata.json'
+          if (-not (Test-Path -LiteralPath $metaPath)) {
+            throw "Missing $metaPath after Verify-Release.ps1."
+          }
+
+          $meta = Get-Content -LiteralPath $metaPath -Raw | ConvertFrom-Json
+          $productVersion = [string]$meta.executable.productVersion
+          if ([string]::IsNullOrWhiteSpace($productVersion)) {
+            throw 'release-metadata.json has empty executable.productVersion.'
+          }
+
+          $tag = $env:RELEASE_TAG
+          if ([string]::IsNullOrWhiteSpace($tag)) {
+            throw 'RELEASE_TAG is empty.'
+          }
+
+          $expectedTag = "v$productVersion"
+          if ($tag -cne $expectedTag) {
+            throw "Release tag '$tag' does not match product version tag '$expectedTag'."
+          }
+
+          $archiveRel = [string]$meta.archive.path
+          if ([string]::IsNullOrWhiteSpace($archiveRel)) {
+            throw 'release-metadata.json has empty archive.path.'
+          }
+          if (-not (Test-Path -LiteralPath $archiveRel)) {
+            throw "Release archive path does not exist: $archiveRel"
+          }
+
+          # Prefer explicit path from the gate (includes the required v-prefix).
+          "archive=$archiveRel" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "version=$productVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          Write-Output "Validated tag=$tag productVersion=$productVersion archive=$archiveRel"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          files: |
+            ${{ steps.release_meta.outputs.archive }}
+            artifacts/release-metadata.json
+          generate_release_notes: true
+          fail_on_unmatched_files: true
