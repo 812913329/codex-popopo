@@ -36,11 +36,11 @@ jobs:
           cache-dependency-path: '**/packages.lock.json'
 
       - name: Restore dependencies
-        run: dotnet restore --locked-mode
+        run: dotnet restore src\CodexProfileLauncher\CodexProfileLauncher.csproj --locked-mode
 
       - name: Publish (self-contained, single-file)
         run: >
-          dotnet publish CodexProfileLauncher\CodexProfileLauncher.csproj
+          dotnet publish src\CodexProfileLauncher\CodexProfileLauncher.csproj
           -c Release
           -o artifacts\publish\win-x64
           --no-restore
@@ -49,7 +49,7 @@ jobs:
         id: version
         shell: pwsh
         run: |
-          [xml]$csproj = Get-Content CodexProfileLauncher\CodexProfileLauncher.csproj
+          [xml]$csproj = Get-Content src\CodexProfileLauncher\CodexProfileLauncher.csproj
           $v = $csproj.Project.PropertyGroup.Version
           Write-Output "version=$v"
           echo "version=$v" >> $env:GITHUB_OUTPUT
